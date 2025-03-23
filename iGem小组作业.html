@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iGem小组作业</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Condensed:wght@400;700&family=Lora:wght@500&family=Merriweather:wght@700&family=Raleway:wght@600&display=swap" rel="stylesheet">
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+        h2{
+            top:0;
+            display: block;
+            font-size: 70px;
+            font-weight: 800;
+            color: rgba(69, 141, 11, 0.434);
+            width: 100%;
+            text-align: center;
+            height: 200px;
+        }
+        /* 导航栏样式 */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(128, 128, 128, 0.194);
+            padding: 10px;
+            z-index: 1000;
+            transition: 0.3s;
+
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 30px;
+        }
+
+        .nav-links a {
+            /* color: rgb(2, 151, 244); */
+            text-decoration: none;
+            /* font-size: 20px; */
+            font-weight: bold;
+            /* font-family: ; */
+            /* transition: 0.3s; */
+            font-family: 'Roboto Condensed', sans-serif;
+            color: #34495e;
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #e74c3c;
+            text-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
+        }
+
+        /* 封面样式 */
+        .cover {
+            height: 1000px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('封面.png');
+            background-size: contain;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: rgb(5, 244, 248);
+        }
+
+        .cover h1 {
+            font-size: 4.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.05em;
+        }
+
+        /*主题介绍样式*/
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .card h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3498db;
+            padding-left: 1rem;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .timeline-item {
+            padding: 20px;
+            margin-left: 240px;
+            border-left: 3px solid #3498db;
+            position: relative;
+        }
+
+        .timeline-item h3 {
+            color: #27ae60;
+            font-family: 'Lora', serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 24px;
+            width: 16px;
+            height: 16px;
+            background: #3498db;
+            border-radius: 50%;
+        }
+
+        /*饮食种类样式*/
+        body {
+            font-family: 'Segoe UI';
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .table-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            height: 600px;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #34495e;
+            /* color: white; */
+            padding: 16px;
+            font-size: 20px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: #ecf0f1;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .term {
+            /*color: #3498db;*/
+            color: #2980b9;
+            font-weight: 500;
+            cursor: help;
+            position: relative;
+            border-bottom: 1px dotted #3498db;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.9);
+            /*color: white;*/
+            padding: 14px 18px;
+            border-radius: 6px;
+            width: 400px;
+            font-family: 'Open Sans', sans-serif;
+            color: #f8f9fa;
+            font-size: 0.95rem;
+            pointer-events: none;
+            z-index: 100;
+            /*font-size: 14px;*/
+            line-height: 1.5;
+            transform: translate(-50%, 10px);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .term:hover .tooltip {
+            opacity: 1;
+        }
+
+        .positive {
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        .negative {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+
+        /*全球差异*/
+        #location{
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #location .content{
+            background-image: url(World\ Map.webp);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            height:500px;
+            width:calc(500px/1118*1749);
+            display: flex;
+            justify-content: center;
+        }
+
+        #location .pt{
+            position:absolute;
+            margin-right:calc(500px/1118*1749 + 300px/2);
+        }
+
+        #location .point{
+            height:50px;
+            width:50px;
+        }
+
+        #location .text{
+            padding:10px;
+            height: 80px;
+            width: 300px;
+            background-color: aliceblue;
+            transition: all 0.8s;
+            transform-style: preserve-3d;
+            transform: rotateY(-180deg) translateX(80px);
+            backface-visibility: hidden;
+            z-index: 10;
+            border-radius: 10px;
+        }
+
+        #point1{
+            position:absolute;
+            margin-top: 125px;
+            margin-left: 600px;
+            z-index: 1;
+        }
+        #text1{
+            position:absolute;
+            margin-top: 75px;
+            margin-left: 600px;
+        }
+
+        #point1:hover~#text1{
+            transform: rotateY(0deg) translateX(0px);
+        }
+
+        #point2{
+            position:absolute;
+            margin-top: 200px;
+            margin-left:150px;
+            z-index: 1;
+        }
+        #text2{
+            position:absolute;
+            margin-top: 150px;
+            margin-left:150px;
+        }
+        #point2:hover~#text2{
+            transform: rotateY(0deg) translateX(0px);
+        }
+
+        #point3{
+            position:absolute;
+            margin-top:200px;
+            margin-left:250px;
+            z-index: 1;
+        }
+        #text3{
+            position:absolute;
+            margin-top:150px;
+            margin-left: 250px;
+        }
+        #point3:hover~#text3{
+            transform: rotateY(0deg) translateX(0px);
+        }
+
+        #point4{
+            position:absolute;
+            margin-top:150px;
+            margin-left: 260px;
+            z-index: 1;
+        }
+        #text4{
+            position:absolute;
+            margin-top:100px;
+            margin-left: 260px;
+        }
+        #point4:hover~#text4{
+            transform: rotateY(0deg) translateX(0px);
+        }
+
+        #point5{
+            position:absolute;
+            margin-left:150px ;
+            margin-top: 70px;
+            z-index: 1;
+        }
+        #text5{
+            position:absolute;
+            margin-left:150px ;
+            margin-top: 20px;
+        }
+        #point5:hover~#text5{
+            transform: rotateY(0deg) translateX(0px);
+        }
+
+
+        /* 疾病关联样式 */
+        .section {
+            padding: 80px 30px;
+        }
+        
+        .intro {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .intro-item h1 {
+            color: #8e44ad;
+            font-family: 'Merriweather', serif;
+            text-shadow: 1px 1px 2px rgba(142, 68, 173, 0.1);
+        }
+        .intro-item strong {
+            color: #c0392b;
+            font-weight: 600;
+        }
+       
+        .intro-item {
+            padding: 20px;
+            background: #f8f9fa;
+            margin: 20px;
+            border-radius: 8px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: 1s;
+        }
+
+        .intro-item.active {
+            opacity: 1;
+            transform: translateY(0);
+        }      
+        
+
+        /* 未来展望 */
+        .container{
+            display:grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap:20px ;
+        }
+        .p{
+            background-color: white ;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #555;
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .p h3{
+            display: block;
+            width: 100%;
+            text-align: center;
+            position: absolute;
+            color: #16a085;
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+        }
+        .p ul{
+            margin-top:2em;
+            opacity: 0;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .p:hover h3{
+            height: 100%;
+        }
+        .p:hover ul{
+            opacity:1;
+        }
+        
+
+
+        /* 团队成员样式 */
+        .team-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+
+        .team-card {
+            width: 280px;
+            height: 350px;
+            position: relative;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, gold 0%, #04e7d1 100%);
+            color: rgba(137, 43, 226, 0.687);
+            font-weight: bold;
+        }
+
+        .team-card:hover {
+            transform: rotateY(180deg);
+        }
+
+        .member-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 25px;
+            border: 3px solid #15b7c9;
+        }
+
+        .member-role {
+            
+            font-weight: bold;
+            margin-top: 15px;
+            color: #3498db;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+
+        .card-back p {
+            text-align: center;
+            line-height: 1.5;
+            font-size: 30px;
+            padding: 0 15px;
+            color: #2c3e50;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+        }
+
+        /*回到顶部*/
+        .back-to-top{
+            position: fixed;
+            right: 20px;
+            bottom: 60px;
+            width: 70px;
+            height: 70px;
+            background: url('回到顶部.png');
+            border: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            font-size: 5px;
+            z-index: 800;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        /* 响应式设计,屏幕宽度过小时竖直排列 */
+        @media (max-width: 700px) {
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* 全球差异响应式设计 */
+        @media (max-width: 920px) {
+            #location h2{
+                height:auto;
+            }
+            #location .content{
+                height:calc((100vw - 120px)/1749*1118);
+                width:calc(100vw - 120px);
+                justify-content:start;
+            }
+            #location .pt{
+                margin-right:0;
+                height:calc((100vw - 120px)/1749*1118);
+                width:calc(100vw - 120px);
+                position:absolute;
+            }
+            #point1{
+                margin-left: 65%;
+                margin-top:15%;
+            }
+            #text1{
+                margin-left: 65%;
+                margin-top:calc(15% - 50px);
+            }
+            #point2{
+                margin-left:10%;
+                margin-top:25%;
+            }
+            #text2{
+                margin-left:10%;
+                margin-top:calc(25% - 50px);
+            }
+            #point3{
+                margin-left: 21%;
+                margin-top:25%;
+            }
+            #text3{
+                margin-left: 21%;
+                margin-top:calc(25% - 50px);
+            }
+            #point4{
+                margin-left: 22%;
+                margin-top: 20%;
+            }
+            #text4{
+                margin-left: 22%;
+                margin-top: calc(20% - 50px);
+            }
+            #point5{
+                margin-left: 9%;
+                margin-top: 8.5%;
+            }
+            #text5{
+                margin-left: 9%;
+                margin-top: calc(8.5% - 50px);
+            }
+            #location .text{
+            width: 100%;
+            max-width: 300px;
+            background-color: aliceblue;
+            transition: all 0.8s;
+            transform-style: preserve-3d;
+            transform: rotateY(-180deg) translateX(80px);
+            backface-visibility: hidden;
+            z-index: 10;
+            border-radius: 10px;
+            }
+        }
+
+        /* 未来展望响应式设计 */
+        @media (max-width: 700px) {
+            .container{
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!--回到顶部按钮-->
+    <button class="back-to-top" onclick="scrollToTop()"></button>
+
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <ul class="nav-links">
+            <li><a href="#introduction">主题介绍</a></li>
+            <li><a href="#kind">饮食种类</a></li>
+            <li><a href="#global">全球差异</a></li>           
+            <li><a href="#combination">疾病关联</a></li>
+            <li><a href="#outlook">未来展望</a></li>
+            <li><a href="#team">团队成员</a></li>
+        </ul>
+    </nav>
+
+    <!-- 封面 -->
+    <section class="cover">
+        <div class="cover-content">
+            <h1 style="font-size: 90px; margin-bottom: 15px; text-transform: capitalize">《Diet and the Gut Microbiome》</h1>
+            <p style="font-size: 30px;">不同饮食习惯对肠道微生物群组成和功能的影响</p>
+        </div>
+    </section>
+
+
+    <!-- 主题介绍 -->
+    <section id="introduction" class="section">
+        <h2 style="text-align:center; margin-bottom:30px;">Theme Introduction</h2>
+        <section class="card-grid">
+            <div class="card">
+                <h1>📌 核心机制</h1>
+                <p>饮食通过三种主要途径影响微生物组：</p>
+                <ul>
+                    <li>改变肠道pH值和氧气水平</li>
+                    <li>提供特定营养底物</li>
+                    <li>调节宿主免疫系统</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h1>🔬 关键发现</h1>
+                <p>全球研究揭示：</p>
+                <ul>
+                    <li>地中海饮食提升SCFAs 35%</li>
+                    <li>西方饮食减少微生物多样性达40%</li>
+                    <li>高纤维饮食降低结肠癌风险28%</li>
+                </ul>
+            </div>
+        </section>
+        <div class="card">
+            <div class="diet-timeline">
+                <h1>⏳ 饮食干预时间效应</h1>
+                <div class="timeline-item">
+                    <h3>短期(1周内)</h3>
+                    <p>快速改变菌群组成，但功能基因保持稳定</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>中期(1-6月)</h3>
+                    <p>代谢通路显著变化，SCFAs产量提升</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>长期(6月+)</h3>
+                    <p>形成稳定生态网络，产生持续健康效应</p>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+
+
+    <!--饮食种类-->
+    <section id="kind" class="section">
+        <h2 style="text-align:center; margin-bottom:30px;">Types of Diet</h2>
+        <div class="table-container">
+            <table id="dietTable">
+                <thead>
+                    <tr>
+                        <th>饮食类型</th>
+                        <th>微生物变化</th>
+                        <th>健康影响</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>地中海饮食</td>
+                        <td>
+                            <span class="term">↑ Faecalibacterium
+                                <span class="tooltip">重要的丁酸产生菌，具有抗炎特性，与肠道屏障功能正相关</span>
+                            </span>、
+                            <span class="term">↑ Roseburia
+                                <span class="tooltip">参与膳食纤维发酵，产生短链脂肪酸(SCFAs)</span>
+                            </span>；
+                            <span class="term">↓ Ruminococcus
+                                <span class="tooltip">某些菌株与炎症性肠病相关</span>
+                            </span>
+                        </td>
+                        <td class="positive">促进<span class="term">SCFAs
+                                <span class="tooltip">短链脂肪酸(Short-chain fatty acids)，包括乙酸、丙酸和丁酸，具有抗炎和代谢调节作用</span>
+                            </span>生成，降低心血管疾病风险</td>
+                    </tr>
+                    <tr>
+                        <td>高纤维饮食</td>
+                        <td>
+                            <span class="term">↑ Prevotella
+                                <span class="tooltip">纤维降解菌，常见于非西方化人群肠道</span>
+                            </span>、
+                            <span class="term">↑ Bifidobacterium
+                                <span class="tooltip">益生菌属，参与免疫调节和病原体抑制</span>
+                            </span>
+                        </td>
+                        <td class="positive">改善肠道屏障功能，降低结肠癌风险</td>
+                    </tr>
+                    <tr>
+                        <td>植物性饮食</td>
+                        <td>
+                            <span class="term">↑ Akkermansia
+                                <span class="tooltip">黏液降解菌，与代谢健康正相关</span>
+                            </span>、
+                            <span class="term">↑ Lactobacillus
+                                <span class="tooltip">产乳酸益生菌，维持肠道酸性环境</span>
+                            </span>
+                        </td>
+                        <td class="positive">抗炎、抗氧化，支持心血管和神经健康</td>
+                    </tr>
+                    <tr>
+                        <td>高蛋白饮食</td>
+                        <td>
+                            <span class="term">↑ Bacteroides
+                                <span class="tooltip">蛋白水解优势菌，可能产生潜在有害代谢物</span>
+                            </span>、
+                            <span class="term">↑ Clostridium
+                                <span class="tooltip">包含致病菌种，与蛋白质发酵相关</span>
+                            </span>
+                        </td>
+                        <td class="negative">可能产生<span class="term">吲哚
+                                <span class="tooltip">色氨酸代谢产物，高浓度时具有细胞毒性</span>
+                            </span>、硫化氢等炎症性代谢物</td>
+                    </tr>
+                    <tr>
+                        <td>生酮饮食</td>
+                        <td>
+                            <span class="term">↓ Bifidobacterium
+                                <span class="tooltip">关键益生菌减少可能影响免疫调节</span>
+                            </span>、
+                            <span class="term">↑ Bacteroides
+                                <span class="tooltip">适应低碳水环境的优势菌群</span>
+                            </span>
+                        </td>
+                        <td class="negative">长期可能减少有益菌，增加致病菌</td>
+                    </tr>
+                    <tr>
+                        <td>西方饮食</td>
+                        <td>
+                            <span class="term">↑ Bacteroides
+                                <span class="tooltip">适应高脂肪环境的菌属</span>
+                            </span>、
+                            <span class="term">↑ Blautia
+                                <span class="tooltip">与肥胖和代谢综合征相关</span>
+                            </span>；
+                            <span class="term">多样性降低
+                                <span class="tooltip">微生物多样性是肠道健康的重要指标</span>
+                            </span>
+                        </td>
+                        <td class="negative">慢性炎症、代谢综合征、肠漏症</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+
+    <!--全球差异-->
+    <section id="global" class="section">
+        <div id="location">
+            <h2>Global diets associated with the microbiome</h2>
+            <div class="content">
+                <div class="pt">
+                    <img src="point.png" alt="point1"  class="point" id="point1">
+                    <div class="text" id="text1">
+                        <p>工业化人群(如欧美国家)：微生物多样性低，以Bacteroides为主。</p>
+                    </div>
+                </div>
+                <div class="pt"> 
+                    <img src="point.png" alt="point2"  class="point"  id="point2">
+                    <div class="text" id="text2">
+                        <p>非工业化人群(如Hadza狩猎采集者)：微生物多样性高，富含纤维降解菌(如Prevotella)。</p>
+                    </div>
+                </div>
+                <div class="pt">
+                    <img src="point.png" alt="point3"  class="point"  id="point3">
+                    <div class="text" id="text3">
+                        <p>印度南部(杂食性饮食)：<br>
+                            ↑ Bacteroides、↑ Faecalibacterium。</p>
+                    </div>
+                </div>
+                <div class="pt">
+                    <img src="point.png" alt="point4"  class="point"  id="point4">
+                    <div class="text" id="text4">
+                        <p>印度北部(植物性饮食)：<br>
+                            ↑ Prevotella。</p>
+                    </div>
+                </div>
+                <div class="pt">
+                    <img src="point.png" alt="point5"  class="point"  id="point5">
+                    <div class="text" id="text5">
+                        <p>移民至西方国家后，微生物组逐渐“西化”，Prevotella减少，Bacteroides增加。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- 疾病关联 -->
+    <section id="combination" class="section">      
+        <div class="intro">
+            <h2 style="text-align:center; margin-bottom:30px;">Disease Association</h2>
+
+            <div class="intro-item">
+                <h1 style="font-family: STXingkai; font-size: 30px;">📊 代谢综合征</h1>
+                <p>代谢综合征(如肥胖、糖尿病、心血管疾病)与肠道微生物组的变化密切相关。</p>
+                <p>➤ <strong>肥胖</strong>：肥胖者的肠道微生物组中，<em>Firmicutes/Bacteroidetes</em> 比例升高，导致能量吸收增加。</p>
+                <p>➤ <strong>2型糖尿病</strong>：糖尿病患者肠道中丁酸产生菌(如 <em>Faecalibacterium</em>)减少，而促炎菌(如 <em>Enterobacteriaceae</em>)增加。</p>
+                <p>➤ <strong>心血管疾病</strong>：高动物蛋白饮食会增加TMAO(三甲胺氧化物)的产生，TMAO与动脉粥样硬化和血栓形成有关。</p>
+            </div>
+
+            <div class="intro-item">
+                <h1 style="font-family: STXingkai; font-size: 30px;">🌍 肠道疾病</h1>
+                <p style="color: #04e7d1;">饮食对肠道疾病(如炎症性肠病、肠易激综合征)的影响显著。</p>
+                <p>➤ <strong>炎症性肠病(IBD)</strong>：高动物蛋白饮食会增加有害代谢物(如酚类和硫化氢)，抑制丁酸的产生，导致肠道炎症。</p>
+                <p>➤ <strong>肠易激综合征(IBS)</strong>：低FODMAP饮食(减少可发酵碳水化合物)可以缓解症状，调节肠道菌群，减少 <em>Bifidobacterium</em> 等菌群的不平衡。</p>
+            </div>
+
+            <div class="intro-item">
+                <h1 style="font-family: STXingkai; font-size: 30px;">💡 癌症</h1>
+                <p style="color: gold;">饮食通过影响肠道微生物组，与某些癌症的发生密切相关。</p>
+                <p>➤ <strong>结直肠癌</strong>：西方饮食(高脂肪、低纤维)促进 <em>Fusobacterium</em> 等致癌菌的增殖，这些菌群通过激活E-钙粘蛋白信号通路和改变肿瘤微环境，促进癌症发展。</p>
+                <p>➤ <strong>其他癌症</strong>：高脂肪饮食还可能通过改变胆汁酸代谢，增加肝癌和胰腺癌的风险。</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 未来展望 -->
+    <section id="outlook" class="section">
+        <h2 style="text-align:center; margin-bottom:30px">Future Outlook</h2>
+        <div class="container">
+            <div id="p1" class="p">
+                <h3>多组学技术整合的重要性</h3>
+                    <ul>
+                        <li>需要整合多组学技术（如宏基因组学、宏转录组学、宏蛋白质组学、代谢组学等）来阐明微生物组、宿主和营养之间的复杂关系。</li>
+                        <li>通过跨平台比较和临床结果评估，确保数据的一致性和可重复性。</li>
+                    </ul>
+            </div>
+            <div id="p2" class="p">
+                <h3>下一代测序技术的应用</h3>
+                <ul>
+                    <li>长读长宏基因组测序技术将显著提升宏基因组组装的质量，增强结构变异检测能力，深入研究特定时间点的肠道微生物组功能。</li>
+                    <li>这将有助于更好地理解饮食-微生物组-疾病之间的相互作用。</li>
+                </ul>
+            </div>
+            <div id="p3" class="p">
+                <h3>饮食对肠道微生物组的影响</h3>
+                <ul>
+                    <li>饮食是肠道微生物组变化的重要驱动因素，但目前对饮食与微生物组之间因果关系的理解仍存在挑战。</li>
+                    <li>需要大规模随机对照试验来验证饮食改变、微生物组调节和健康结果之间的因果关系。</li>
+                </ul>
+            </div>
+            <div id="p4" class="p">
+                <h3>全球合作与数据收集</h3>
+                <ul>
+                    <li>需要全球范围内的合作来收集不同地区、不同人群的微生物组数据，以理解不同饮食和生活方式对微生物组的影响。</li>
+                    <li>特别关注低收入国家人群的微生物组数据，以开发针对特定地区需求的治疗策略。</li>
+                </ul>
+            </div>
+            <div id="p5" class="p">
+                <h3>长期研究的必要性</h3>
+                <ul>
+                    <li>需要进行长期（数十年跨度）的标准化研究，以准确捕捉饮食对肠道微生物组的影响，包括不同生命阶段的连续和实时监测。</li>
+                    <li>结合饮食元数据（如营养摄入和进餐时间）可能通过移动应用或可穿戴设备实现。</li>
+                </ul>
+            </div>
+            <div id="p6" class="p">
+                <h3>人工智能和数学模型的结合</h3>
+                <ul>
+                    <li>结合人工智能（如机器学习和深度学习）与数学模型，提高对肠道微生物组代谢潜力和相互作用的预测性能。</li>
+                    <li>这些模型可以提供对饮食-微生物组相互作用的深入洞察，支持个性化营养和微生物组靶向疗法的开发。</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 团队成员 -->
+    <section id="team" class="section">
+        <h2 style="text-align:center; margin-bottom:30px;">Team Members</h2>
+        <div class="team-container">
+            <div class="team-card">
+                <div class="card-face card-front">
+                    <img src="吴昊.jpg" alt="成员A" class="member-img">
+                    <h3>成员A</h3>
+                    <p class="member-role">吴昊</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>****<br>
+                       ****<br>
+                       ****<br>
+                       ****</p>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <div class="card-face card-front">
+                    <img src="" alt="成员B" class="member-img">
+                    <h3>成员B</h3>
+                    <p class="member-role">陶菲煊</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>****<br>
+                       ****<br>
+                       ****<br>
+                       ****</p>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <div class="card-face card-front">
+                    <img src="陈纪衡.jpg" alt="陈纪衡" class="member-img">
+                    <h3>成员C</h3>
+                    <p class="member-role">陈纪衡</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>导航栏,To Top<br>
+                       主题介绍<br>
+                       饮食种类<br>
+                       成员分工</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        //回到顶部
+        const btn = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            btn.classList.toggle('show', window.scrollY > 500);
+        });
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' 
+            });
+        }
+
+
+        //疾病关联
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.intro-item').forEach((el) => {
+            observer.observe(el);
+        });
+        new Swiper('.swiper-container', {            
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            autoplay: {
+                delay: 3000,
+            },
+        });
+    </script>
+</body>
+</html>
